@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:calculator/viewmodel/calculator_viewmodel.dart';
@@ -19,17 +18,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Consumer di sini agar MaterialApp bisa ikut-ikutan berganti tema
     return Consumer<CalculatorViewModel>(
       builder: (context, viewModel, child) {
         return MaterialApp(
           title: 'Calculator',
           debugShowCheckedModeBanner: false,
           
-          // --- Definisi Tema ---
           themeMode: viewModel.isDarkMode ? ThemeMode.dark : ThemeMode.light,
           
-          // Tema Terang
           theme: ThemeData(
             brightness: Brightness.light,
             scaffoldBackgroundColor: AppColors.lightBg,
@@ -47,7 +43,6 @@ class MyApp extends StatelessWidget {
             )
           ),
 
-          // Tema Gelap
           darkTheme: ThemeData(
             brightness: Brightness.dark,
             scaffoldBackgroundColor: AppColors.darkBg,
@@ -61,7 +56,7 @@ class MyApp extends StatelessWidget {
               primary: AppColors.darkPrimary,
               secondary: AppColors.darkOperator,
               onSurface: AppColors.darkText,
-              surface: AppColors.darkBg, // Tombol angka akan sama dengan bg
+              surface: AppColors.darkBg,
             )
           ),
 

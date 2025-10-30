@@ -1,4 +1,3 @@
-// view/widgets/calculator_display.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:calculator/viewmodel/calculator_viewmodel.dart';
@@ -8,7 +7,6 @@ class CalculatorDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Menggunakan Consumer untuk 'mendengarkan' perubahan
     return Consumer<CalculatorViewModel>(
       builder: (context, viewModel, child) {
         return Container(
@@ -19,7 +17,6 @@ class CalculatorDisplay extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // Tampilan Ekspresi/Histori (kecil di atas)
               Text(
                 viewModel.expression,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -28,7 +25,6 @@ class CalculatorDisplay extends StatelessWidget {
                 maxLines: 1,
               ),
               const SizedBox(height: 16),
-              // Tampilan Display Utama (besar di bawah)
               Text(
                 viewModel.display,
                 style: Theme.of(context).textTheme.headlineLarge?.copyWith(

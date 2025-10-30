@@ -1,29 +1,20 @@
-// viewmodel/calculator_viewmodel.dart
 import 'package:flutter/foundation.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 class CalculatorViewModel extends ChangeNotifier {
-  // --- STATE ---
 
-  // Tampilan utama (angka besar di bawah)
   String _display = '0';
-  // Tampilan histori (teks kecil di atas)
   String _expression = '';
 
-  // State internal untuk logika
   String _operand1 = '';
   String _operator = '';
   bool _isOperatorClicked = false;
-  bool _isDarkMode = true; // State untuk tema
+  bool _isDarkMode = true;
 
-  // --- GETTERS (untuk dibaca oleh View) ---
   String get display => _display;
   String get expression => _expression;
   bool get isDarkMode => _isDarkMode;
 
-  // --- ACTIONS (untuk dipanggil oleh View) ---
-
-  /// Dipanggil setiap kali tombol ditekan
   void onButtonPressed(String text) {
     if (text == 'C') {
       _clear();
@@ -38,23 +29,17 @@ class CalculatorViewModel extends ChangeNotifier {
     } else if (text == '.') {
       _handleDecimal();
     } else if (text == '()') {
-      // Logika () bisa sangat kompleks (melacak kurung buka/tutup).
-      // Untuk demo ini, kita akan melewatinya.
     } else {
       _handleNumber(text);
     }
     
-    // Memberi tahu View bahwa state telah berubah
     notifyListeners();
   }
 
-  /// Mengubah tema
   void toggleTheme() {
     _isDarkMode = !_isDarkMode;
     notifyListeners();
   }
-
-  // --- LOGIKA INTERNAL (Private) ---
 
   void _handleNumber(String number) {
     if (_isOperatorClicked) {
@@ -76,7 +61,6 @@ class CalculatorViewModel extends ChangeNotifier {
   }
 
   void _handleOperator(String op) {
-    // Jika ada operasi berantai (misal: 5 + 5 +)
     if (_operand1.isNotEmpty && !_isOperatorClicked) {
       _calculate();
     }
@@ -102,13 +86,12 @@ class CalculatorViewModel extends ChangeNotifier {
 
   void _calculate() {
     if (_operand1.isEmpty || _operator.isEmpty || _isOperatorClicked) {
-      return; // Belum ada operasi lengkap
+      return;
     }
 
     String operand2 = _display;
     String fullExpression = '$_operand1 $_operator $operand2';
 
-    // Mengganti simbol UI dengan simbol yang dimengerti parser
     String parseableExpression = fullExpression
         .replaceAll('×', '*')
         .replaceAll('÷', '/');
@@ -119,17 +102,16 @@ class CalculatorViewModel extends ChangeNotifier {
       ContextModel cm = ContextModel();
       double eval = exp.evaluate(EvaluationType.REAL, cm);
 
-      // Format hasil
       if (eval == eval.toInt()) {
         _display = eval.toInt().toString();
       } else {
-        _display = eval.toStringAsFixed(2); // 2 angka desimal
+        _display = eval.toStringAsFixed(2);
       }
 
       _expression = fullExpression;
-      _operand1 = ''; // Siap untuk operasi baru
+      _operand1 = '';
       _operator = '';
-      _isOperatorClicked = true; // Angka berikutnya akan me-reset display
+      _isOperatorClicked = true;
 
     } catch (e) {
       _display = 'Error';

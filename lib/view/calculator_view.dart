@@ -10,8 +10,6 @@ class CalculatorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Kita tidak perlu 'listen: false' di sini lagi,
-    // karena tombolnya akan ada di dalam Consumer di Drawer.
 
     return Scaffold(
       appBar: AppBar(
@@ -19,17 +17,12 @@ class CalculatorView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        // Kita HAPUS 'actions' (tombol tema) dari sini
       ),
       
-      // --- TAMBAHKAN PROPERTI 'drawer' INI ---
       drawer: Drawer(
         child: ListView(
-          // Padding: EdgeInsets.zero penting untuk menghapus 
-          // spasi kosong di atas (di area status bar)
           padding: EdgeInsets.zero,
           children: [
-            // Header untuk drawer
             DrawerHeader(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
@@ -43,17 +36,14 @@ class CalculatorView extends StatelessWidget {
               ),
             ),
             
-            // Pindahkan Consumer ke sini untuk tombol ganti tema
             Consumer<CalculatorViewModel>(
               builder: (context, vm, child) {
                 return SwitchListTile(
                   title: const Text('Dark Mode'),
                   value: vm.isDarkMode,
                   onChanged: (bool newValue) {
-                    // Panggil action di ViewModel
                     vm.toggleTheme();
                   },
-                  // Tambahkan ikon agar lebih cantik
                   secondary: Icon(
                     vm.isDarkMode 
                       ? Icons.nightlight_round_outlined 
@@ -65,20 +55,16 @@ class CalculatorView extends StatelessWidget {
           ],
         ),
       ),
-      // ------------------------------------
 
       body: Column(
         children: const [
-          // Bagian Layar (Display)
           Expanded(
             flex: 2,
             child: CalculatorDisplay(),
           ),
           
-          // Garis pemisah
           Divider(height: 1),
 
-          // Bagian Tombol (Keypad)
           Expanded(
             flex: 4,
             child: CalculatorKeypad(),
