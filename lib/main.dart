@@ -3,11 +3,17 @@ import 'package:provider/provider.dart';
 import 'package:calculator/viewmodel/calculator_viewmodel.dart';
 import 'package:calculator/view/calculator_view.dart';
 import 'package:calculator/utils/app_colors.dart';
+import 'package:calculator/utils/database_helper.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  await DatabaseHelper.instance.database; 
+  
   runApp(
     ChangeNotifierProvider(
       create: (context) => CalculatorViewModel(),
+      lazy: false,
       child: const MyApp(),
     ),
   );

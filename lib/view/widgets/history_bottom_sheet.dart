@@ -1,4 +1,3 @@
-// view/widgets/history_bottom_sheet.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:calculator/viewmodel/calculator_viewmodel.dart';
@@ -41,7 +40,7 @@ class HistoryBottomSheet extends StatelessWidget {
                     
                     return ListTile(
                       title: Text(
-                        historyEntry,
+                        historyEntry.historyString, 
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           fontWeight: FontWeight.w600
                         ),
