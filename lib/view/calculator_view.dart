@@ -20,6 +20,35 @@ class CalculatorView extends StatelessWidget {
     );
   }
 
+  void _showClearHistoryDialog(BuildContext context) {
+    final viewModel = Provider.of<CalculatorViewModel>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Konfirmasi'),
+          content: const Text('Apakah Anda yakin ingin menghapus semua riwayat? Tindakan ini tidak dapat dibatalkan.'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Batal'),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+              onPressed: () {
+                viewModel.clearHistory();
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +57,6 @@ class CalculatorView extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        
         actions: [
           IconButton(
             icon: const Icon(Icons.history_outlined),
@@ -73,6 +101,17 @@ class CalculatorView extends StatelessWidget {
                 );
               },
             ),
+
+            const Divider(),
+            
+            ListTile(
+              leading: const Icon(Icons.delete_forever_outlined),
+              title: const Text('Hapus Riwayat'),
+              onTap: () {
+                Navigator.of(context).pop();
+                _showClearHistoryDialog(context);
+              },
+            ),
           ],
         ),
       ),
@@ -83,9 +122,7 @@ class CalculatorView extends StatelessWidget {
             flex: 2,
             child: CalculatorDisplay(),
           ),
-          
           Divider(height: 1),
-
           Expanded(
             flex: 4,
             child: CalculatorKeypad(),

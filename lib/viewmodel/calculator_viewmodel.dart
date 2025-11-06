@@ -1,3 +1,4 @@
+// viewmodel/calculator_viewmodel.dart
 import 'package:flutter/foundation.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:calculator/utils/database_helper.dart';
@@ -19,6 +20,12 @@ class CalculatorViewModel extends ChangeNotifier {
   Future<void> loadHistory() async {
     _historyList = await DatabaseHelper.instance.getAllHistory();
     notifyListeners();
+  }
+
+  Future<void> clearHistory() async {
+    await DatabaseHelper.instance.clearHistory();
+    
+    await loadHistory();
   }
 
   CalculatorViewModel() {
