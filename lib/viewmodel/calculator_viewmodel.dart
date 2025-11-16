@@ -1,4 +1,3 @@
-// viewmodel/calculator_viewmodel.dart
 import 'package:flutter/foundation.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:calculator/utils/database_helper.dart';
@@ -21,28 +20,24 @@ class CalculatorViewModel extends ChangeNotifier {
 
   Future<void> loadHistory() async {
     _historyList = await DatabaseHelper.instance.getAllHistory();
-    // Hapus notifyListeners() dari sini untuk menghindari panggilan ganda
   }
 
   Future<void> clearHistory() async {
     await DatabaseHelper.instance.clearHistory();
     await loadHistory();
-    notifyListeners(); // Panggil notifikasi setelah selesai
+    notifyListeners();
   }
 
   CalculatorViewModel() {
-    // Muat riwayat saat aplikasi pertama kali dimulai
     loadHistory().then((_) {
       notifyListeners();
     });
   }
 
-  // 1. Ubah fungsi ini menjadi ASYNC
   void onButtonPressed(String text) async {
     if (text == 'C') {
       _clear();
     } else if (text == '=') {
-      // 2. TUNGGU (await) kalkulasi selesai
       await _calculate(); 
     } else if (text == '()') {
       _handleBrackets();
@@ -57,7 +52,6 @@ class CalculatorViewModel extends ChangeNotifier {
       _handleNumber(text);
     }
     
-    // 3. Panggil notifyListeners() SATU KALI di akhir
     notifyListeners();
   }
 
@@ -68,35 +62,33 @@ class CalculatorViewModel extends ChangeNotifier {
 
   void useHistoryValue(CalculationHistory historyEntry) {
     final result = historyEntry.result;
-    _justCalculated = false; // Reset flag saat pakai riwayat
+    _justCalculated = false;
 
-    if (_display == '0' || _display == 'Error') {
+    if (_display == '0' || _display == 'Error' || _justCalculated) {
       _display = result;
     } else {
       _display += result;
     }
-    // notifyListeners() akan dipanggil oleh onButtonPressed
+    notifyListeners();
   }
 
   void _clear() {
     _display = '0';
     _expression = '';
     _openBrackets = 0;
-    _justCalculated = false; // Reset flag
+    _justCalculated = false;
   }
   
   void _handleNumber(String number) {
-    // Logika yang sudah benar: jika baru saja menghitung, ganti display
     if (_display == '0' || _justCalculated) {
       _display = number;
-      _justCalculated = false; // Langsung reset flag
+      _justCalculated = false;
     } else {
       _display += number;
     }
   }
 
   void _handleDecimal() {
-    // Jika baru saja menghitung, mulai dengan "0."
     if (_justCalculated) {
       _display = '0.';
       _justCalculated = false;
@@ -106,7 +98,7 @@ class CalculatorViewModel extends ChangeNotifier {
   }
 
   void _handleOperator(String op) {
-    _justCalculated = false; // Reset flag jika menekan operator
+    _justCalculated = false;
     
     if (_display == '0' && op != '-') {
       return;
@@ -120,12 +112,13 @@ class CalculatorViewModel extends ChangeNotifier {
   }
 
   void _handleBrackets() {
-    _justCalculated = false; // Reset flag jika menekan kurung
+    _justCalculated = false;
     
     String lastChar = _display.substring(_display.length - 1);
-    if (_display == '0') {
+    if (_display == '0' || _justCalculated) {
       _display = '(';
       _openBrackets++;
+      _justCalculated = false;
     } else if (lastChar == '÷' || lastChar == '×' || lastChar == '-' || lastChar == '+' || lastChar == '(') {
       _display += '(';
       _openBrackets++;
@@ -175,15 +168,13 @@ class CalculatorViewModel extends ChangeNotifier {
       );
       await DatabaseHelper.instance.insert(newHistory);
       
-      await loadHistory(); // Muat ulang riwayat (tanpa notify)
+      await loadHistory();
 
     } catch (e) {
       _expression = _display; 
       _display = 'Error'; 
     }
     
-    // 4. TAMBAHKAN BARIS YANG HILANG INI
-    // Set flag bahwa perhitungan baru saja selesai
     _justCalculated = true;
   }
 }

@@ -19,8 +19,7 @@ class HistoryBottomSheet extends StatelessWidget {
             'Riwayat Perhitungan',
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          const Divider(height: 24),
-
+          const SizedBox(height: 16.0),
           Consumer<CalculatorViewModel>(
             builder: (context, vm, child) {
               if (vm.history.isEmpty) {

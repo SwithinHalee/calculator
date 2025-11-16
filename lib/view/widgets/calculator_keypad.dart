@@ -1,4 +1,3 @@
-// view/widgets/calculator_keypad.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:calculator/viewmodel/calculator_viewmodel.dart';
@@ -10,9 +9,9 @@ class CalculatorKeypad extends StatelessWidget {
 
   static const List<String> buttons = [
     'C', '()', '%', '÷',
-    '1', '2', '3', '×',
+    '7', '8', '9', '×',
     '4', '5', '6', '+',
-    '7', '8', '9', '-',
+    '1', '2', '3', '-',
     '.', '0', '000', '=',
   ];
 
@@ -21,10 +20,9 @@ class CalculatorKeypad extends StatelessWidget {
     final viewModel = Provider.of<CalculatorViewModel>(context, listen: false);
 
     return Container(
-      // padding: const EdgeInsets.all(16), // HAPUS BARIS INI
       color: Theme.of(context).brightness == Brightness.light 
             ? AppColors.lightDisplayBg 
-            : null,
+            : AppColors.darkKeypadBg,
       child: GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -45,4 +43,4 @@ class CalculatorKeypad extends StatelessWidget {
       ),
     );
   }
-} 
+}

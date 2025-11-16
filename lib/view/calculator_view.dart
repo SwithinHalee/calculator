@@ -1,4 +1,3 @@
-// lib/view/calculator_view.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:calculator/viewmodel/calculator_viewmodel.dart';
@@ -6,8 +5,48 @@ import 'package:calculator/view/widgets/calculator_display.dart';
 import 'package:calculator/view/widgets/calculator_keypad.dart';
 import 'package:calculator/view/widgets/history_bottom_sheet.dart';
 
-class CalculatorView extends StatelessWidget {
+class CalculatorView extends StatefulWidget {
   const CalculatorView({super.key});
+
+  @override
+  State<CalculatorView> createState() => _CalculatorViewState();
+}
+
+class _CalculatorViewState extends State<CalculatorView> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(-1, 0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeInOut));
+
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeIn));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _toggleDrawer() {
+    _animationController.isCompleted
+        ? _animationController.reverse()
+        : _animationController.forward();
+  }
 
   void _showHistory(BuildContext context) {
     showModalBottomSheet(
@@ -21,43 +60,20 @@ class CalculatorView extends StatelessWidget {
     );
   }
 
-  void _showClearHistoryDialog(BuildContext context) {
-    final viewModel = Provider.of<CalculatorViewModel>(context, listen: false);
-
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Konfirmasi'),
-          content: const Text('Apakah Anda yakin ingin menghapus semua riwayat? Tindakan ini tidak dapat dibatalkan.'),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Batal'),
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Hapus', style: TextStyle(color: Colors.red)),
-              onPressed: () {
-                viewModel.clearHistory();
-                Navigator.of(dialogContext).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    final viewModel = Provider.of<CalculatorViewModel>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calculator'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: _toggleDrawer,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.history_outlined),
@@ -68,8 +84,56 @@ class CalculatorView extends StatelessWidget {
           const SizedBox(width: 10),
         ],
       ),
-      
-      drawer: Drawer(
+      body: Stack(
+        children: [
+          SafeArea(
+            bottom: false,
+            child: Column(
+              children: const [
+                Expanded(
+                  flex: 2,
+                  child: CalculatorDisplay(),
+                ),
+                Expanded(
+                  flex: 4,
+                  child: CalculatorKeypad(),
+                ),
+              ],
+            ),
+          ),
+          
+          AnimatedBuilder(
+            animation: _animationController,
+            builder: (context, child) {
+              if (_animationController.value == 0.0) {
+                return const SizedBox.shrink();
+              }
+              return FadeTransition(
+                opacity: _fadeAnimation,
+                child: GestureDetector(
+                  onTap: _toggleDrawer,
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                ),
+              );
+            },
+          ),
+
+          SlideTransition(
+            position: _slideAnimation,
+            child: _buildDrawer(viewModel),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawer(CalculatorViewModel viewModel) {
+    return Material(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.75,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -109,26 +173,9 @@ class CalculatorView extends StatelessWidget {
               leading: const Icon(Icons.delete_forever_outlined),
               title: const Text('Hapus Riwayat'),
               onTap: () {
-                Navigator.of(context).pop();
-                _showClearHistoryDialog(context);
+                viewModel.clearHistory();
+                _toggleDrawer();
               },
-            ),
-          ],
-        ),
-      ),
-      
-      body: SafeArea(
-        bottom: false, // Ini adalah baris kuncinya
-        child: Column(
-          children: const [
-            Expanded(
-              flex: 2,
-              child: CalculatorDisplay(),
-            ),
-            Divider(height: 1),
-            Expanded(
-              flex: 4,
-              child: CalculatorKeypad(),
             ),
           ],
         ),

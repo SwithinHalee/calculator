@@ -1,4 +1,3 @@
-// view/widgets/calculator_button.dart
 import 'package:flutter/material.dart';
 
 class CalculatorButton extends StatelessWidget {
@@ -41,21 +40,24 @@ class CalculatorButton extends StatelessWidget {
     final textColor = _getTextColor(context);
     final theme = Theme.of(context);
 
-    return Material(
-      color: buttonColor,
-      // borderRadius: BorderRadius.circular(24), // HAPUS BARIS INI
-      elevation: 0, 
-      shadowColor: Colors.transparent,
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Material(
+        color: buttonColor,
+        borderRadius: BorderRadius.circular(8),
+        elevation: 0, 
+        shadowColor: Colors.transparent,
 
-      child: InkWell(
-        onTap: onPressed,
-        // borderRadius: BorderRadius.circular(24), // HAPUS BARIS INI
-        child: Center(
-          child: Text(
-            text,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: textColor,
-              fontWeight: FontWeight.w600,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(8),
+          child: Center(
+            child: Text(
+              text,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: textColor,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ),
