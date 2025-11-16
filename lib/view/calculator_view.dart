@@ -1,3 +1,4 @@
+// lib/view/calculator_view.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:calculator/viewmodel/calculator_viewmodel.dart';
@@ -116,18 +117,21 @@ class CalculatorView extends StatelessWidget {
         ),
       ),
       
-      body: Column(
-        children: const [
-          Expanded(
-            flex: 2,
-            child: CalculatorDisplay(),
-          ),
-          Divider(height: 1),
-          Expanded(
-            flex: 4,
-            child: CalculatorKeypad(),
-          ),
-        ],
+      body: SafeArea(
+        bottom: false, // Ini adalah baris kuncinya
+        child: Column(
+          children: const [
+            Expanded(
+              flex: 2,
+              child: CalculatorDisplay(),
+            ),
+            Divider(height: 1),
+            Expanded(
+              flex: 4,
+              child: CalculatorKeypad(),
+            ),
+          ],
+        ),
       ),
     );
   }

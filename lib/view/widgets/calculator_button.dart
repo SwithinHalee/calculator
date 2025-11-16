@@ -1,3 +1,4 @@
+// view/widgets/calculator_button.dart
 import 'package:flutter/material.dart';
 
 class CalculatorButton extends StatelessWidget {
@@ -13,11 +14,11 @@ class CalculatorButton extends StatelessWidget {
   Color _getButtonColor(BuildContext context) {
     final theme = Theme.of(context);
     if (text == '=') {
-      return theme.colorScheme.primary;
+      return theme.colorScheme.primary; 
     }
     return theme.brightness == Brightness.light
-        ? theme.colorScheme.surface
-        : Colors.transparent;
+        ? theme.colorScheme.surface 
+        : Colors.transparent; 
   }
 
   Color _getTextColor(BuildContext context) {
@@ -26,12 +27,12 @@ class CalculatorButton extends StatelessWidget {
       return Colors.white;
     }
     if (text == 'C' || text == '()' || text == '%') {
-      return theme.colorScheme.secondary;
+      return theme.colorScheme.secondary; 
     }
     if (text == '÷' || text == '×' || text == '+' || text == '-') {
-      return theme.colorScheme.secondary;
+      return theme.colorScheme.secondary; 
     }
-    return theme.colorScheme.onSurface;
+    return theme.colorScheme.onSurface; 
   }
 
   @override
@@ -42,12 +43,13 @@ class CalculatorButton extends StatelessWidget {
 
     return Material(
       color: buttonColor,
-      borderRadius: BorderRadius.circular(24),
-      elevation: theme.brightness == Brightness.light ? 4 : 0,
-      shadowColor: Colors.grey.withOpacity(0.2),
+      // borderRadius: BorderRadius.circular(24), // HAPUS BARIS INI
+      elevation: 0, 
+      shadowColor: Colors.transparent,
+
       child: InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(24),
+        // borderRadius: BorderRadius.circular(24), // HAPUS BARIS INI
         child: Center(
           child: Text(
             text,

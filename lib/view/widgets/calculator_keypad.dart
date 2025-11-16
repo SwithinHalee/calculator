@@ -1,3 +1,4 @@
+// view/widgets/calculator_keypad.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:calculator/viewmodel/calculator_viewmodel.dart';
@@ -20,7 +21,7 @@ class CalculatorKeypad extends StatelessWidget {
     final viewModel = Provider.of<CalculatorViewModel>(context, listen: false);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      // padding: const EdgeInsets.all(16), // HAPUS BARIS INI
       color: Theme.of(context).brightness == Brightness.light 
             ? AppColors.lightDisplayBg 
             : null,
@@ -28,8 +29,8 @@ class CalculatorKeypad extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0,
         ),
         itemCount: buttons.length,
         itemBuilder: (context, index) {
@@ -44,4 +45,4 @@ class CalculatorKeypad extends StatelessWidget {
       ),
     );
   }
-}
+} 
